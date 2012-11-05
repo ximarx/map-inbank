@@ -1,0 +1,37 @@
+<shortcuts>
+	<programGroup defaultName="InBank\InBank Client eBanking"
+		location="applications" />
+	<shortcut name="InBank eBanking" 
+		target="$INSTALL_PATH\InBankCliente.bat" 
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il client per eBanking"
+		iconFile="$INSTALL_PATH\images\icon.ico" 
+		initialState="noShow" 
+		desktop="yes"
+		programGroup="yes"
+		applications="no">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+	<shortcut name="InBank eBanking Applet" 
+		target="$INSTALL_PATH\InBankClienteApplet.html"
+		type="Link"  
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia l'applet del client per eBanking"
+		iconFile="$INSTALL_PATH\images\icon.ico" 
+		initialState="noShow" 
+		desktop="yes"
+		programGroup="yes"
+		applications="no">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+	<shortcut name="Uninstall"
+		target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+		workingDirectory="$INSTALL_PATH\Uninstaller" 
+		description="Disinstalla InBank Client Impiegato"
+		initialState="normal" 
+		programGroup="yes" 
+		desktop="no"
+		applications="no">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+</shortcuts>

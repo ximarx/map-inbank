@@ -1,0 +1,39 @@
+<userInput>
+	<!-- Preferenze RMI -->
+	<panel order="0">
+		<createForPack name="Configurazione automatica" />
+		<field type="title" txt="Configurazione delle impostazioni per RMI" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- RMI -->
+		<field type="text" align="left" variable="rmi.hostname" id="config.rmi.hostname">
+			<spec txt="Indirizzo del server:" size="25" set="localhost"/>
+		</field>
+		<field type="text" align="left" variable="rmi.port" id="config.rmi.port">
+			<spec txt="Porta:" size="25" set="1099"/>
+		</field>
+		<field type="text" align="left" variable="rmi.service" id="config.rmi.service">
+			<spec txt="Nome del servizio:" size="25" set="InBankServices"/>
+		</field>
+		<field type="text" align="left" variable="rmi.client.hostname" id="config.rmi.client.hostname">
+			<description align="left" txt="Se il client ed il server risiedono in due postazioni differenti è necessario specificare l'indirizzo esterno o l'hostname del client." />
+			<spec txt="Indirizzo esterno:" size="25" set="$IP_ADDRESS"/>
+		</field>
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>
+	<panel order="1">
+		<createForPack name="Configurazione automatica" />
+		<field type="title" txt="Configurazione del terminale esterno" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- RMI -->
+		<field type="text" align="left" variable="external.driver" id="config.external.driver">
+			<spec txt="Driver:" size="40" set="gccb.bancomat.external.VirtualDeviceAdapterController"/>
+		</field>
+		<field type="text" align="left" variable="external.path" id="config.external.path">
+			<description align="left" txt="Specificare il percorso dell'archivio in cui è situato il driver specificato. Sono validi archivi .zip e .jar. Non è necessario specificare nulla se viene utilizzato il driver di default"/>
+			<spec txt="Archivio driver:" size="40" set=""/>
+		</field>
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>	
+</userInput>

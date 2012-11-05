@@ -1,0 +1,24 @@
+<shortcuts>
+	<programGroup defaultName="InBank\InBank Client Bancomat"
+		location="applications" />
+	<shortcut name="InBank Bancomat" 
+		target="$INSTALL_PATH\InBankBancomat.bat" 
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il terminale Bancomat"
+		iconFile="$INSTALL_PATH\images\icon.ico" 
+		initialState="noShow" desktop="yes"
+		programGroup="yes"
+		applications="no">
+		<createForPack name="InBank Client Bancomat" />
+	</shortcut>
+	<shortcut name="Uninstall"
+		target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+		workingDirectory="$INSTALL_PATH\Uninstaller" 
+		description="Disinstalla InBank Client Bancomat"
+		initialState="normal" 
+		programGroup="yes" 
+		desktop="no"
+		applications="no">
+		<createForPack name="InBank Client Bancomat" />
+	</shortcut>
+</shortcuts>

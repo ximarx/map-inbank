@@ -1,0 +1,13 @@
+<htm>
+<head>
+<title>InBank Client eBanking Applet</title>
+<head>
+<body>
+<h1>Pagina di caricamento dell'applet</h1> 
+<applet code="gccb.cliente.InBankClienteApplet.class" width="20" height="20" archive="inbank-common-server.jar,inbank-common.jar,inbank-cliente.jar">
+	<param name="server_host_address" value="${rmi.hostname}"/>
+	<param name="server_host_port" value="${rmi.port}"/>
+	<param name="server_service_name" value="${rmi.service}"/>
+	<param name="ui_theme" value=""/>
+</applet>
+</body>

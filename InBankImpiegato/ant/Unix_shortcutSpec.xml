@@ -1,0 +1,25 @@
+<shortcuts>
+	<programGroup defaultName="InBank/InBankClientImpiegato"
+		location="applications" />
+	<shortcut name="InBank Client Impiegato" 
+		target="$INSTALL_PATH/InBankImpiegato.sh"
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il client per Impiegato"
+		iconFile="$INSTALL_PATH/images/icon.png"
+		type="Application" 
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="yes">
+		<createForPack name="InBank Client Impiegato" />
+	</shortcut>
+	<shortcut name="Uninstall"
+		target="$INSTALL_PATH/Uninstaller/uninstaller.jar" 
+		workingDirectory="$INSTALL_PATH/Uninstaller" 
+		description="Disinstalla InBank Client Impiegato"
+		type="Application"
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="no">
+		<createForPack name="InBank Client Impiegato" />
+	</shortcut>
+</shortcuts>

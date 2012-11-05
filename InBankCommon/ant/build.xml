@@ -1,0 +1,571 @@
+<?xml version="1.0"?>
+
+<project name="InBank" default="main" basedir="../..">
+
+	<!-- Directory del progetto -->
+	<property name="prj.common.dir" value="${basedir}/InBankCommon"/>
+	<property name="prj.server.dir" value="${basedir}/InBankServer"/>
+	<property name="prj.impiegato.dir" value="${basedir}/InBankImpiegato"/>
+	<property name="prj.bancomat.dir" value="${basedir}/InBankBancomat"/>
+	<property name="prj.cliente.dir" value="${basedir}/InBankCliente"/>
+	
+	<!-- Carico le proprieta' dei singoli progetti -->
+	<loadproperties srcFile="${prj.common.dir}/ant/common.properties" />
+	<loadproperties srcFile="${prj.bancomat.dir}/ant/bancomat.properties" />
+	<loadproperties srcFile="${prj.impiegato.dir}/ant/impiegato.properties" />
+	<loadproperties srcFile="${prj.cliente.dir}/ant/cliente.properties" />
+	<loadproperties srcFile="${prj.server.dir}/ant/server.properties" />
+	
+	<path id="build.classpath.common">
+		<pathelement location="${prj.common.dir}/lib/mysql-connector-java.jar"/>
+		<pathelement location="${prj.common.dir}/lib/tikeswing.jar"/>
+	</path>
+	
+	<path id="build.classpath.gui">
+		<pathelement location="${prj.common.dir}/lib/commons-beanutils.jar"/>
+		<pathelement location="${prj.common.dir}/lib/commons-logging.jar"/>
+		<pathelement location="${prj.common.dir}/lib/commons-lang-2.0.jar"/>
+		<pathelement location="${prj.common.dir}/lib/log4j.jar"/>
+		<pathelement location="${prj.common.dir}/lib/tikeswing.jar"/>
+		<pathelement location="${prj.common.dir}/dist/inbank-common.jar"/>
+	</path>
+
+	<path id="build.classpath.server">
+		<pathelement location="${prj.common.dir}/lib/commons-beanutils.jar"/>
+		<pathelement location="${prj.common.dir}/lib/commons-logging.jar"/>
+		<pathelement location="${prj.common.dir}/lib/commons-lang-2.0.jar"/>
+		<pathelement location="${prj.common.dir}/lib/log4j.jar"/>
+		<pathelement location="${prj.common.dir}/lib/tikeswing.jar"/>
+		<pathelement location="${prj.common.dir}/dist/inbank-common-server.jar"/>
+	</path>
+	
+	<taskdef name="izpack" classpath="${izpack.dir}/lib/compiler.jar"
+	         classname="com.izforge.izpack.ant.IzPackTask"/>
+	
+	<target name="main" >
+		<echo>--- Usage ---</echo>
+		<echo>ant installer-all -> Crea l'installer per tutti i progetti</echo>
+		<echo>ant installer-$NOME_PROGETTO -> Crea l'installer per il progetto specifico</echo>
+		<echo>ant deploy-all -> Crea la dir completa per tutti i progetti</echo>
+		<echo>ant deploy-$NOME_PROGETTO -> Crea la dir per un progetto specifico</echo>
+		<echo>ant create-all-jar-only -> Crea solo i jar per tutti</echo>
+		<echo>ant javadoc -> Crea la javadoc per tutti i progetti</echo>
+	</target>
+    	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: init                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+    	<echoproperties />
+    </target>
+
+	<!-- ================================= 
+          target: javadoc              
+         ================================= -->
+    <target name="javadoc" depends="init" description="--> Crea la javadoc in dist/javadoc">
+    	<delete quiet="true" dir="${deploy.javadoc.dir}" />
+    	<mkdir dir="${deploy.javadoc.dir}"/>
+		<javadoc access="package" destdir="${deploy.javadoc.dir}" classpathref="build.classpath.server">
+			<packageset dir="${prj.common.dir}/src" defaultexcludes="yes" />
+			<packageset dir="${prj.server.dir}/src" defaultexcludes="yes" />
+			<packageset dir="${prj.cliente.dir}/src" defaultexcludes="yes" />
+			<packageset dir="${prj.bancomat.dir}/src" defaultexcludes="yes" />
+			<packageset dir="${prj.impiegato.dir}/src" defaultexcludes="yes" />
+		</javadoc>        
+    </target>
+
+	<!-- ================================= 
+          target: installer-all              
+         ================================= -->
+    <target name="installer-all" depends="init" description="--> Crea tutti gli installer in dist/">
+    	<delete quiet="true" dir="${dist.dir}" />
+    	<antcall target="installer-server" />
+    	<antcall target="installer-impiegato" />
+    	<antcall target="installer-cliente" />
+    	<antcall target="installer-bancomat" />
+    </target>
+	
+	
+	<!-- ================================= 
+          target: installer-server              
+         ================================= -->
+    <target name="installer-server" depends="deploy-server" description="--> Crea l'installer per il server in dist/">
+    	<copy tofile="${deploy.server.dir}/COPYING" file="${prj.server.dir}/ant/COPYING"/>
+    	<copy tofile="${deploy.server.dir}/RELEASE_NOTES.html" file="${prj.server.dir}/ant/RELEASE_NOTES.html"/>
+    	<copy tofile="${deploy.server.dir}/shortcutSpec.xml" file="${prj.server.dir}/ant/shortcutSpec.xml"/>
+    	<copy tofile="${deploy.server.dir}/Unix_shortcutSpec.xml" file="${prj.server.dir}/ant/Unix_shortcutSpec.xml"/>
+    	<copy tofile="${deploy.server.dir}/userInputSpec.xml" file="${prj.server.dir}/ant/userInputSpec.xml"/>
+    	<copy tofile="${deploy.server.dir}/configs/configs.properties" file="${prj.server.dir}/ant/default_configs.properties"  overwrite="true" />
+    	<fixcrlf srcdir="${deploy.server.dir}" eol="dos">
+    		<include name="**/*.properties" />
+    		<include name="**/*.bat" />
+    	</fixcrlf>
+    	<izpack input="${iz.server.conf}"
+    	        output="${dist.dir}/installer-server.jar"
+    	        installerType="standard" basedir="${deploy.server.dir}"
+    	        izPackDir="${izpack.dir}/"/>
+    </target>
+
+	<!-- ================================= 
+          target: installer-impiegato              
+         ================================= -->
+    <target name="installer-impiegato" depends="deploy-impiegato" description="--> Crea l'installer per l'impiegato in dist/">
+    	<copy tofile="${deploy.impiegato.dir}/COPYING" file="${prj.impiegato.dir}/ant/COPYING"/>
+    	<copy tofile="${deploy.impiegato.dir}/RELEASE_NOTES.html" file="${prj.impiegato.dir}/ant/RELEASE_NOTES.html"/>
+    	<copy tofile="${deploy.impiegato.dir}/shortcutSpec.xml" file="${prj.impiegato.dir}/ant/shortcutSpec.xml"/>
+    	<copy tofile="${deploy.impiegato.dir}/Unix_shortcutSpec.xml" file="${prj.impiegato.dir}/ant/Unix_shortcutSpec.xml"/>
+    	<copy tofile="${deploy.impiegato.dir}/userInputSpec.xml" file="${prj.impiegato.dir}/ant/userInputSpec.xml"/>
+    	<copy tofile="${deploy.impiegato.dir}/configs/configs.properties" file="${prj.impiegato.dir}/ant/default_configs.properties"  overwrite="true" />
+    	<fixcrlf srcdir="${deploy.impiegato.dir}" eol="dos">
+    		<include name="**/*.properties" />
+    		<include name="**/*.bat" />
+    	</fixcrlf>
+    	<izpack input="${iz.impiegato.conf}"
+    	        output="${dist.dir}/installer-impiegato.jar"
+    	        installerType="standard" basedir="${deploy.impiegato.dir}"
+    	        izPackDir="${izpack.dir}/"/>
+    </target>
+
+	<!-- ================================= 
+          target: installer-cliente              
+         ================================= -->
+    <target name="installer-cliente" depends="deploy-cliente" description="--> Crea l'installer per il cliente in dist/">
+    	<copy tofile="${deploy.cliente.dir}/COPYING" file="${prj.cliente.dir}/ant/COPYING"/>
+    	<copy tofile="${deploy.cliente.dir}/RELEASE_NOTES.html" file="${prj.cliente.dir}/ant/RELEASE_NOTES.html"/>
+    	<copy tofile="${deploy.cliente.dir}/shortcutSpec.xml" file="${prj.cliente.dir}/ant/shortcutSpec.xml"/>
+    	<copy tofile="${deploy.cliente.dir}/Unix_shortcutSpec.xml" file="${prj.cliente.dir}/ant/Unix_shortcutSpec.xml"/>
+    	<copy tofile="${deploy.cliente.dir}/userInputSpec.xml" file="${prj.cliente.dir}/ant/userInputSpec.xml"/>
+    	<copy tofile="${deploy.cliente.dir}/configs/configs.properties" file="${prj.cliente.dir}/ant/default_configs.properties"  overwrite="true" />
+    	<fixcrlf srcdir="${deploy.cliente.dir}" eol="dos">
+    		<include name="**/*.properties" />
+    		<include name="**/*.bat" />
+    	</fixcrlf>
+    	<izpack input="${iz.cliente.conf}"
+    	        output="${dist.dir}/installer-cliente.jar"
+    	        installerType="standard" basedir="${deploy.cliente.dir}"
+    	        izPackDir="${izpack.dir}/"/>
+    </target>
+
+	<!-- ================================= 
+          target: installer-bancomat              
+         ================================= -->
+    <target name="installer-bancomat" depends="deploy-bancomat" description="--> Crea l'installer per il bancomat in dist/">
+    	<copy tofile="${deploy.bancomat.dir}/COPYING" file="${prj.bancomat.dir}/ant/COPYING"/>
+    	<copy tofile="${deploy.bancomat.dir}/RELEASE_NOTES.html" file="${prj.bancomat.dir}/ant/RELEASE_NOTES.html"/>
+    	<copy tofile="${deploy.bancomat.dir}/shortcutSpec.xml" file="${prj.bancomat.dir}/ant/shortcutSpec.xml"/>
+    	<copy tofile="${deploy.bancomat.dir}/Unix_shortcutSpec.xml" file="${prj.bancomat.dir}/ant/Unix_shortcutSpec.xml"/>
+    	<copy tofile="${deploy.bancomat.dir}/userInputSpec.xml" file="${prj.bancomat.dir}/ant/userInputSpec.xml"/>
+    	<copy tofile="${deploy.bancomat.dir}/configs/configs.properties" file="${prj.bancomat.dir}/ant/default_configs.properties"  overwrite="true" />
+    	<fixcrlf srcdir="${deploy.bancomat.dir}" eol="dos">
+    		<include name="**/*.properties" />
+    		<include name="**/*.bat" />
+    	</fixcrlf>
+    	<izpack input="${iz.bancomat.conf}"
+    	        output="${dist.dir}/installer-bancomat.jar"
+    	        installerType="standard" basedir="${deploy.bancomat.dir}"
+    	        izPackDir="${izpack.dir}/"/>
+    </target>
+	
+	
+	<!-- ================================= 
+          target: create-all-jar-only              
+         ================================= -->
+    <target name="create-all-jar-only" depends="init" description="--> Crea tutti i jar dei progetti">
+        <antcall target="server-jar"/>
+    	<antcall target="cliente-jar"/>
+        <antcall target="impiegato-jar"/>
+        <antcall target="bancomat-jar"/>
+    </target>
+
+	
+	<!-- ================================= 
+          target: deploy-server              
+         ================================= -->
+    <target name="deploy-server" depends="server-jar" description="--> Crea nella directory server/ l'applicazione installabile">
+		<delete quiet="true" dir="${deploy.server.dir}" />
+        <mkdir dir="${deploy.server.dir}"/>
+    	<mkdir dir="${deploy.server.dir}/lib"/>
+    	<mkdir dir="${deploy.server.dir}/configs"/>
+    	<mkdir dir="${deploy.server.dir}/images"/>
+    	<mkdir dir="${deploy.server.dir}/logs"/>
+    	<mkdir dir="${deploy.server.dir}/help"/>
+    	<copy todir="${deploy.server.dir}/configs">
+    		<fileset dir="${configs.server.dir}">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.server.dir}/images">
+    		<fileset dir="${images.server.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.server.dir}/help">
+    		<fileset dir="${help.server.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.server.dir}/lib" >
+    		<fileset dir="${prj.common.dir}/lib">
+    			<include name="*.jar"/>
+    		</fileset>
+    	</copy>
+    	<copy file="${prj.common.dir}/res/db_mysql.sql" todir="${deploy.server.dir}" />
+    	<copy file="${dist.dir}/inbank-server.jar" todir="${deploy.server.dir}" />
+    	<copy file="${dist.dir}/inbank-common-server.jar" todir="${deploy.server.dir}" />
+    	<copy todir="${deploy.server.dir}" >
+    		<fileset dir="${res.server.dir}">
+    			<include name="**/*.*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+	<!-- ================================= 
+          target: deploy-impiegato              
+         ================================= -->
+	    <target name="deploy-impiegato" depends="impiegato-jar" description="--> Crea nella directory impiegato/ l'applicazione installabile">
+		<delete quiet="true" dir="${deploy.impiegato.dir}" />
+        <mkdir dir="${deploy.impiegato.dir}"/>
+    	<mkdir dir="${deploy.impiegato.dir}/lib"/>
+    	<mkdir dir="${deploy.impiegato.dir}/configs"/>
+    	<mkdir dir="${deploy.impiegato.dir}/images"/>
+    	<mkdir dir="${deploy.impiegato.dir}/help"/>
+    	<copy todir="${deploy.impiegato.dir}/configs">
+    		<fileset dir="${configs.impiegato.dir}">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.impiegato.dir}/images">
+    		<fileset dir="${images.impiegato.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.impiegato.dir}/help">
+    		<fileset dir="${help.impiegato.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.impiegato.dir}/lib" >
+    		<fileset dir="${prj.common.dir}/lib">
+    			<include name="*.jar"/>
+    			<exclude name="*mysql*.jar"/>
+    		</fileset>
+    	</copy>
+    	<copy file="${dist.dir}/inbank-impiegato.jar" todir="${deploy.impiegato.dir}" />
+    	<copy file="${dist.dir}/inbank-common.jar" todir="${deploy.impiegato.dir}" />
+    	<copy todir="${deploy.impiegato.dir}" >
+    		<fileset dir="${res.impiegato.dir}">
+    			<include name="**/*.*"/>
+    		</fileset>
+    	</copy>
+    </target>
+	
+	
+	<!-- ================================= 
+          target: deploy-bancomat              
+         ================================= -->
+    <target name="deploy-bancomat" depends="bancomat-jar" description="--> Crea nella directory bancomat/ l'applicazione installabile">
+		<delete quiet="true" dir="${deploy.bancomat.dir}" />
+        <mkdir dir="${deploy.bancomat.dir}"/>
+    	<mkdir dir="${deploy.bancomat.dir}/lib"/>
+    	<mkdir dir="${deploy.bancomat.dir}/configs"/>
+    	<mkdir dir="${deploy.bancomat.dir}/images"/>
+    	<copy todir="${deploy.bancomat.dir}/configs">
+    		<fileset dir="${configs.bancomat.dir}">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.bancomat.dir}/images">
+    		<fileset dir="${images.bancomat.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.bancomat.dir}/lib" >
+    		<fileset dir="${prj.common.dir}/lib">
+    			<include name="*.jar"/>
+    			<exclude name="*mysql*.jar"/>
+    		</fileset>
+    	</copy>
+    	<copy file="${dist.dir}/inbank-bancomat.jar" todir="${deploy.bancomat.dir}" />
+    	<copy file="${dist.dir}/inbank-common.jar" todir="${deploy.bancomat.dir}" />
+    	<copy todir="${deploy.bancomat.dir}" >
+    		<fileset dir="${res.bancomat.dir}">
+    			<include name="**/*.*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+
+	<!-- ================================= 
+          target: deploy-cliente              
+         ================================= -->
+	    <target name="deploy-cliente" depends="cliente-jar, common-server-jar" description="--> Crea nella directory cliente/ l'applicazione installabile">
+		<delete quiet="true" dir="${deploy.cliente.dir}" />
+        <mkdir dir="${deploy.cliente.dir}"/>
+    	<mkdir dir="${deploy.cliente.dir}/lib"/>
+    	<mkdir dir="${deploy.cliente.dir}/configs"/>
+    	<mkdir dir="${deploy.cliente.dir}/images"/>
+    	<mkdir dir="${deploy.cliente.dir}/help"/>
+    	<copy todir="${deploy.cliente.dir}/configs">
+    		<fileset dir="${configs.cliente.dir}">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.cliente.dir}/images">
+    		<fileset dir="${images.cliente.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.cliente.dir}/help">
+    		<fileset dir="${help.cliente.dir}">
+    			<include name="*.*"/>
+    		</fileset>
+    	</copy>
+    	<copy todir="${deploy.cliente.dir}/lib" >
+    		<fileset dir="${prj.common.dir}/lib">
+    			<include name="*.jar"/>
+    			<exclude name="*mysql*.jar"/>
+    		</fileset>
+    	</copy>
+    	<copy file="${dist.dir}/inbank-cliente.jar" todir="${deploy.cliente.dir}" />
+    	<copy file="${dist.dir}/inbank-common.jar" todir="${deploy.cliente.dir}" />
+	    <copy file="${dist.dir}/inbank-common-server.jar" todir="${deploy.cliente.dir}" />
+    	<copy todir="${deploy.cliente.dir}" >
+    		<fileset dir="${res.cliente.dir}">
+    			<include name="**/*.*"/>
+    		</fileset>
+    	</copy>
+    </target>
+
+
+	<!-- ================================= 
+          target: deploy-all              
+         ================================= -->
+    <target name="deploy-all" depends="init" description="--> Crea nella directory dist/ tutte le cartelle dei vari client">
+    	<delete quiet="true" dir="${deploy.server.dir}" />
+    	<delete quiet="true" dir="${deploy.cliente.dir}" />
+    	<delete quiet="true" dir="${deploy.impiegato.dir}" />
+    	<delete quiet="true" dir="${deploy.bancomat.dir}" />
+    	<antcall target="deploy-bancomat"/>
+    	<antcall target="deploy-impiegato"/>
+        <antcall target="deploy-cliente"/>
+        <antcall target="deploy-server"/>
+    </target>
+
+	
+	
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: common-server-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="common-server-compile" depends="__clean-build">
+    	<javac srcdir="${prj.common.dir}/src" classpathref="build.classpath.common" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+    	<rmic classname="gccb.net.rmi.RMIServer.ServiceFactory"  base="${build.dir}" />
+    	<rmic base="${build.dir}" verify="true" includes="gccb/net/rmi/services/*Service.class" />
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: common-server-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="common-server-jar" depends="common-server-compile">
+		<mkdir dir="${dist.dir}"/>
+    	<manifest file="${build.dir}/gccb/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Class-Path" value="" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-common-server.jar" manifest="${build.dir}/gccb/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    	<signjar destDir="${dist.dir}" alias="inbank" keystore="${prj.common.dir}/ant/inbank.store" storepass="password" preservelastmodified="true">
+    	  <path>
+    	    <fileset dir="${dist.dir}" includes="inbank-common-server.jar" />
+    	  </path>
+    	  <flattenmapper />
+    	</signjar>    	
+    </target>
+	
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: common-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="common-compile" depends="__clean-build">
+    	<javac srcdir="${prj.common.dir}/src" classpathref="build.classpath.common" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+		<!-- Eliminare i file non utili -->
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: common-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="common-jar" depends="common-compile">
+		<mkdir dir="${dist.dir}"/>
+    	<manifest file="${build.dir}/gccb/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Class-Path" value="" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-common.jar" manifest="${build.dir}/gccb/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    	<signjar destDir="${dist.dir}" alias="inbank" keystore="${prj.common.dir}/ant/inbank.store" storepass="password" preservelastmodified="true">
+    	  <path>
+    	    <fileset dir="${dist.dir}" includes="inbank-common.jar" />
+    	  </path>
+    	  <flattenmapper />
+    	</signjar>    	
+    </target>
+
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: server-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="server-compile">
+    	<javac srcdir="${prj.server.dir}/src" classpathref="build.classpath.server" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+    </target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: server-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="server-jar" depends="common-server-jar">
+    	<antcall target="__clean-build" />
+    	<antcall target="server-compile" />
+    	<copy todir="${build.dir}">
+    		<fileset dir="${prj.server.dir}/src">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<manifest file="${build.dir}/gccb/server/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Main-Class" value="gccb/server/InBankServer" />
+    		<attribute name="Class-Path" value="inbank-common-server.jar lib/mysql-connector-java.jar lib/commons-beanutils.jar lib/commons-lang-2.0.jar lib/commons-logging.jar lib/log4j.jar lib/tikeswing.jar" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-server.jar" manifest="${build.dir}/gccb/server/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="*.properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: bancomat-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="bancomat-compile">
+    	<javac srcdir="${prj.bancomat.dir}/src" classpathref="build.classpath.gui" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+    </target>
+	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: bancomat-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="bancomat-jar" depends="common-jar">
+    	<antcall target="__clean-build" />
+    	<antcall target="bancomat-compile" />
+    	<copy todir="${build.dir}">
+    		<fileset dir="${prj.bancomat.dir}/src">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<manifest file="${build.dir}/gccb/bancomat/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Main-Class" value="gccb/bancomat/InBankBancomat" />
+    		<attribute name="Class-Path" value="inbank-common.jar lib/commons-beanutils.jar lib/commons-lang-2.0.jar lib/commons-logging.jar lib/log4j.jar lib/tikeswing.jar" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-bancomat.jar" manifest="${build.dir}/gccb/bancomat/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="*.properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: impiegato-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="impiegato-compile">
+    	<javac srcdir="${prj.impiegato.dir}/src" classpathref="build.classpath.gui" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+    </target>
+	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: impiegato-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="impiegato-jar" depends="common-jar">
+    	<antcall target="__clean-build" />
+    	<antcall target="impiegato-compile" />
+    	<copy todir="${build.dir}">
+    		<fileset dir="${prj.impiegato.dir}/src">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<manifest file="${build.dir}/gccb/impiegato/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Main-Class" value="gccb/impiegato/InBankImpiegato" />
+    		<attribute name="Class-Path" value="inbank-common.jar lib/commons-beanutils.jar lib/commons-lang-2.0.jar lib/commons-logging.jar lib/log4j.jar lib/tikeswing.jar" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-impiegato.jar" manifest="${build.dir}/gccb/impiegato/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="*.properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    </target>
+
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: cliente-compile                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="cliente-compile">
+    	<javac srcdir="${prj.cliente.dir}/src" classpathref="build.classpath.gui" destdir="${build.dir}" target="1.6" source="1.6" debug="on" ></javac>
+    </target>
+	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: cliente-jar                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="cliente-jar" depends="common-jar">
+    	<antcall target="__clean-build" />
+    	<antcall target="cliente-compile" />
+    	<copy todir="${build.dir}">
+    		<fileset dir="${prj.cliente.dir}/src">
+    			<include name="*.properties"/>
+    		</fileset>
+    	</copy>
+    	<manifest file="${build.dir}/gccb/cliente/MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}" />
+    		<attribute name="Main-Class" value="gccb/cliente/InBankCliente" />
+    		<attribute name="Class-Path" value="inbank-common.jar lib/commons-beanutils.jar lib/commons-lang-2.0.jar lib/commons-logging.jar lib/log4j.jar lib/tikeswing.jar" />
+    	</manifest>
+    	
+    	<jar jarfile="${dist.dir}/inbank-cliente.jar" manifest="${build.dir}/gccb/cliente/MANIFEST.MF">
+    		<fileset dir="${build.dir}">
+    			<include name="*.properties" />
+    			<include name="**/*.class" />
+    		</fileset>
+    	</jar>
+    	<signjar destDir="${dist.dir}" alias="inbank" keystore="${prj.common.dir}/ant/inbank.store" storepass="password" preservelastmodified="true">
+    	  <path>
+    	    <fileset dir="${dist.dir}" includes="inbank-cliente.jar" />
+    	  </path>
+    	  <flattenmapper />
+    	</signjar>    	
+    </target>
+	
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: __clean-build                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="__clean-build">
+		<delete quiet="true" dir="${build.dir}" />
+    	<mkdir dir="${build.dir}" />
+    </target>
+
+
+</project>

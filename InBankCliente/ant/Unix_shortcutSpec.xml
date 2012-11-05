@@ -1,0 +1,36 @@
+<shortcuts>
+	<programGroup defaultName="InBank/InBankClientImpiegato"
+		location="applications" />
+	<shortcut name="InBank Client eBanking" 
+		target="$INSTALL_PATH/InBankCliente.sh"
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il client per eBanking"
+		iconFile="$INSTALL_PATH/images/icon.png"
+		type="Application" 
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="yes">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+	<shortcut name="InBank Client eBanking" 
+		target="$INSTALL_PATH/InBankClienteApplet.html"
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il client per eBanking"
+		iconFile="$INSTALL_PATH/images/icon.png"
+		type="Link" 
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="yes">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+	<shortcut name="Uninstall"
+		target="$INSTALL_PATH/Uninstaller/uninstaller.jar" 
+		workingDirectory="$INSTALL_PATH/Uninstaller" 
+		description="Disinstalla InBank Client eBanking"
+		type="Application"
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="no">
+		<createForPack name="InBank Client eBanking" />
+	</shortcut>
+</shortcuts>

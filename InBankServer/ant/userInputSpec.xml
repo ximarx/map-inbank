@@ -1,0 +1,95 @@
+<userInput>
+	<!-- Preferenze MYSQL -->
+	<panel order="0">
+		<createForPack name="Configurazione automatica (Windows)" />
+		<createForPack name="Configurazione automatica (*nix)" />
+		<!-- <createForPack name="Configurazione automatica" /> -->
+		<field type="title" txt="Configurazione delle impostazioni di MYSQL" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- MYSQL path -->
+		<field type="space"/>
+		<!-- DB -->
+		<field type="text" align="left" variable="db.hostname" id="config.db.hostname">
+			<spec txt="Indirizzo del server:" size="25" set="localhost"/>
+		</field>
+		<field type="text" align="left" variable="db.port" id="config.db.port">
+			<spec txt="Porta:" size="25" set="3306"/>
+		</field>
+		<field type="text" align="left" variable="db.username" id="config.db.username">
+			<spec txt="Nome utente:" size="25" set="gccb"/>
+		</field>
+		<field type="text" align="left" variable="db.password" id="config.db.password">
+			<spec txt="Password:" size="25" set="gccb"/>
+		</field>
+		<field type="text" align="left" variable="db.database" id="config.db.database">
+			<spec txt="Nome database:" size="25" set="gccb"/>
+		</field>
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>
+	<panel order="1">
+		<createForPack name="Configurazione automatica (Windows)" />
+		<field type="title" txt="Configurazione percorso strumenti Mysql" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- MYSQL path -->
+		<field type="staticText" align="left" txt="Percorso dove risiedono mysql.exe e mysqladmin.exe" />
+		<field type="search" align="left" variable="db.path.win">
+			<spec result="directory" type="directory" txt="Percorso:" checkfilename="mysql.exe">
+				<choice value="C:\Programmi\Mysql\Mysql Server 5.0\bin" />
+				<choice value="C:\Programmi\Mysql\bin" />
+				<choice value="C:\Mysql\bin" />
+				<choice value="C:\Programs files\Mysql\bin" />
+			</spec>
+		</field>
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>
+	<panel order="2">
+		<createForPack name="Configurazione automatica (*nix)" />
+		<field type="title" txt="Configurazione percorso strumenti Mysql" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- MYSQL path -->
+		<field type="staticText" align="left" txt="Percorso dove risiedono mysql e mysqladmin" />
+		<field type="search" align="left" variable="db.path.unix">
+			<spec result="directory" type="directory" txt="Percorso:" checkfilename="mysql">
+				<choice value="/usr/bin" />
+				<choice value="/usr/lib/mysql/bin" />
+				<choice value="/usr/lib/mysql" />
+				<choice value="/opt/mysql" />
+				<choice value="/opt/mysql/bin" />
+			</spec>
+		</field>
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>
+	<!-- Preferenze RMI -->
+	<panel order="3">
+		<createForPack name="Configurazione automatica (Windows)" />
+		<createForPack name="Configurazione automatica (*nix)" />
+		<field type="title" txt="Configurazione delle impostazioni per RMI" bold="true" size="1" />
+		<field type="divider" align="top"/>
+		<!-- RMI -->
+		<field type="text" align="left" variable="rmi.hostname" id="config.rmi.hostname">
+			<spec txt="Indirizzo del server:" size="25" set="localhost"/>
+		</field>
+		<field type="text" align="left" variable="rmi.port" id="config.rmi.port">
+			<spec txt="Porta:" size="25" set="1099"/>
+		</field>
+		<field type="text" align="left" variable="rmi.service" id="config.rmi.service">
+			<spec txt="Nome del servizio:" size="25" set="InBankServices"/>
+		</field>
+		<field type="space"/>
+		<field type="text" align="left" variable="rmi.codebase" id="config.rmi.codebase">
+			<description align="left" txt="Il codebase dei servizi è un indirizzo dove tutti i client possono reperire i file necessari a creare una connessione con il server. 
+I servizi standard di InBank sono situati nel file inbank-common-server.jar disponibile nella cartella di installazione. Separare piu indirizzi con uno spazio (windows) o con \ + spazio (*Unix)" /> 
+			<spec txt="Codebase Servizi:" size="40" set="file:/C:/Programmi/InBankServer/inbank-common-server.jar"/>
+		</field>
+		<field type="staticText" align="left" txt="Possibili percorsi validi potrebbero essere:" />
+		<field type="staticText" align="left" txt="file:/C:/Programmi/InBankServer/inbank-common-server.jar" />
+		<field type="staticText" align="left" txt="file:/home/utente/InBankServer/inbank-common-server.jar" />
+		<field type="staticText" align="left" txt="http://www.indirizzoremoto.com/inbank-common-server.jar" />
+		<field type="staticText" align="left" txt="ftp://utente:password@indirizzo/inbank-common-server.jar" />
+		<field type="space"/>
+		<field type="divider" align="bottom"/>
+	</panel>
+</userInput>

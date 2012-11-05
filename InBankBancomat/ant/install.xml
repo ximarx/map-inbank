@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<installation version="1.0">
+	<info>
+		<appname>InBankBancomat</appname>
+		<appversion>1.0-rc1</appversion>
+		<authors>
+			<author name="Francesco Capozzo (465645)" email="ximarx@libero.it" />
+			<author name="Marco D'Addabbo (464336)" email="marcodaddabbo@msn.com"/>
+			<author name="Michele Doronzo (465939)" email="bart310@email.it"/>
+			<author name="Antonietta Gorgoglione (463340)" email="anto24gorgo@gmail.com"/>
+		</authors>
+		<javaversion>1.6</javaversion>
+		<url>http://cdli.ximarx.dyndns.org/wiki/HomeMap</url>
+	</info>
+	<guiprefs width="640" height="480" resizable="yes">
+		<modifier key="useHeadingPanel" value="yes" />
+		<modifier key="labelGap" value="2" />
+		<modifier key="layoutAnchor" value="NORTHWEST" />
+		<modifier key="headingLineCount" value="1" />
+		<modifier key="headingFontSize" value="1.5" />
+		<modifier key="headingBackgroundColor" value="0x00ffffff" />
+		<modifier key="headingPanelCounter" value="text" />
+		<modifier key="headingPanelCounterPos" value="inHeading" />
+	</guiprefs>
+	<locale>
+		<langpack iso3="ita" />
+	</locale>
+	<resources>
+		<res id="LicencePanel.licence" src="COPYING" />
+		<res id="HTMLInfoPanel.info" src="RELEASE_NOTES.html" />
+		<res src="shortcutSpec.xml" id="shortcutSpec.xml" />
+		<res src="Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml" />
+		<res src="userInputSpec.xml" id="userInputSpec.xml" />
+	</resources>
+	<panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="HTMLInfoPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/>
+		<panel classname="PacksPanel"/>
+		<panel classname="UserInputPanel" id="UserInputPanel.0"/>
+		<panel classname="UserInputPanel" id="UserInputPanel.1"/>
+		<panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel" id="shortcutpanel"/>
+        <panel classname="SimpleFinishPanel"/>		
+	</panels>
+
+	<listeners>
+		<listener installer="SummaryLoggerInstallerListener">
+			<os family="windows" />
+		</listener>
+	</listeners>
+	
+	<packs>
+		<pack name="InBank Client Bancomat" required="yes" preselected="yes">
+			<description>Client per la gestione delle funzionalità per terminale Bancomat</description>
+			<fileset dir="" targetdir="$INSTALL_PATH">
+				<include name="**/*.*" />
+				<exclude name="*.xml" />
+			</fileset>
+			<parsable targetfile="$INSTALL_PATH/InBankBancomat.bat" type="plain" />
+			<parsable targetfile="$INSTALL_PATH/InBankBancomat.sh" type="plain" />
+            <executable targetfile="$INSTALL_PATH/InBankBancomat.sh" stage="never"/>
+            <executable targetfile="$INSTALL_PATH/InBankBancomat.bat" stage="never"/>
+		</pack>
+		<pack name="Configurazione automatica" required="no" preselected="yes">
+			<description>Esegue automaticamente la configurazione delle impostazioni</description>
+			<parsable targetfile="$INSTALL_PATH/configs/configs.properties" type="plain" />
+			<parsable targetfile="$INSTALL_PATH/InBankBancomat.bat" type="plain" />
+			<parsable targetfile="$INSTALL_PATH/InBankBancomat.sh" type="plain" />
+		</pack>		
+	</packs>
+	<native type="izpack" name="ShellLink.dll"/>
+    <native type="3rdparty" name="COIOSHelper.dll" stage="both">
+        <os family="windows"/>
+    </native>	
+</installation>

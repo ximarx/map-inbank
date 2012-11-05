@@ -1,0 +1,36 @@
+<shortcuts>
+	<programGroup defaultName="InBank/InBankServiceServer"
+		location="applications||startMenu" />
+	<shortcut name="InBank Server (rmiregistry included)" 
+		target="$INSTALL_PATH/InBankServer-with-RmiRegistry.sh"
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il server di servizi InBank insieme a RmiRegistry"
+		iconFile="$INSTALL_PATH/images/images.gif"
+		type="Application" 
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="yes">
+		<createForPack name="InBank Service Server" />
+	</shortcut>
+	<shortcut name="InBank Server" 
+		target="$INSTALL_PATH/InBankServer.sh" 
+		workingDirectory="$INSTALL_PATH" 
+		description="Avvia il server di servizi InBank"
+		iconFile="$INSTALL_PATH/images/images.gif"
+		type="Application" 
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="yes">
+		<createForPack name="InBank Service Server" />
+	</shortcut>
+	<shortcut name="Uninstall"
+		target="$INSTALL_PATH/Uninstaller/uninstaller.jar" 
+		workingDirectory="$INSTALL_PATH/Uninstaller" 
+		description="Disinstalla InBank Server Service"
+		type="Application"
+		encoding="UTF-8" 
+		initialState="normal" 
+		desktop="no">
+		<createForPack name="InBank Service Server" />
+	</shortcut>
+</shortcuts>
